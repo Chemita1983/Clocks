@@ -71,11 +71,13 @@
       }
 
       _deleteClock(){
-        /*Evento hacia arriba*/
+        this.dispatchEvent(new CustomEvent('deleteClockEvent', { 
+          bubbles: true, 
+          composed:true
+        }));
       }
 
       _updateTime(){
-        console.log(this.time);
         if (this.time === 0){
           clearInterval(this.x);
         }else{

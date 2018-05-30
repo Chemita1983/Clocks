@@ -52,6 +52,7 @@
       ready(){
         super.ready();
         this.addEventListener('clickedCreate', this.createClock);
+        this.addEventListener('deleteClockEvent',this.removeClock);
       }
       createClock(event){
         const clockElement = document.createElement('clock-component');
@@ -59,6 +60,10 @@
         clockElement.setAttribute('time', event.detail.time || 0);        
         this.$['clock-container'].appendChild(clockElement);
         clockElement.startClock();
+      }
+
+      removeClock(){
+         this.$['clock-container'].remove(); 
       }
     }
 
