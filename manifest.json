@@ -1,0 +1,6 @@
+{
+  "name": "clocks",
+  "short_name": "clocks",
+  "start_url": "/",
+  "display": "standalone"
+}

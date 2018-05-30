@@ -1,0 +1,66 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../custom_components/form-component/form-component.html">
+<link rel="import" href="../../custom_components/clock-component/clock-component.html">
+
+<dom-module id="clocks-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .container {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        
+        justify-content: space-around;
+        -webkit-flex-flow: row wrap;
+        flex-flow: row wrap;
+      }
+
+    </style>
+    
+    <form-component></form-component>
+    <hr>
+    <div id="clock-container" class="container"></div>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class ClocksApp extends Polymer.Element {
+      static get is() { return 'clocks-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'clocks-app'
+          }
+        };
+      }
+      ready(){
+        super.ready();
+        this.addEventListener('clickedCreate', this.createClock);
+      }
+      createClock(event){
+        const clockElement = document.createElement('clock-component');
+        clockElement.setAttribute('caption', event.detail.caption || '');
+        clockElement.setAttribute('time', event.detail.time || 0);        
+        this.$['clock-container'].appendChild(clockElement);
+        clockElement.startClock();
+      }
+    }
+
+    window.customElements.define(ClocksApp.is, ClocksApp);
+  </script>
+</dom-module>

@@ -1,0 +1,89 @@
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="clock-component">
+  <template>
+    <style>
+      :host {
+        display: block;
+        text-align: center;
+      }
+
+      #clockBox {
+          background-color: green;
+          width: 300px;
+        }
+
+      .buttonClock{
+        background-color: lightslategrey;
+        color: black;
+        width: 50px;
+      }
+
+    </style>
+
+   <div id="clockBox">
+      <label id="title">[[caption]]</label>
+      <h1>[[formattedTime]]</h1>
+      <paper-button class="buttonClock" on-click="startClock">Start</paper-button>
+      <paper-button class="buttonClock" on-click="stopClock">Pause</paper-button>
+      <paper-button class="buttonClock"on-click="_deleteClock">Delete</paper-button>
+      <hr>
+   </div>
+
+  </template>
+
+  <script>
+    /**
+     * Main menu
+     *
+     */
+    class ClockComponent extends Polymer.Element {
+      static get is() { return 'clock-component'; }
+      static get properties() {
+        return { 
+          time: {
+            type: Number,
+            value: 0,
+            observer:'_formatTime'
+          },
+          formattedTime:{
+            type: String,
+            value:'00:00:00'
+          },
+          caption:{
+            type: String,
+            value:''
+          }
+        }
+      }
+      _formatTime() {
+        const date = new Date(null);
+        date.setSeconds(this.time);
+        this.set('formattedTime', date.toISOString().substr(11, 8));
+      }
+
+      startClock(){
+        this.x = setInterval(() => { this._updateTime() }, 1000);
+      }
+
+      stopClock(){
+        clearInterval(this.x);
+      }
+
+      _deleteClock(){
+        /*Evento hacia arriba*/
+      }
+
+      _updateTime(){
+        console.log(this.time);
+        if (this.time === 0){
+          clearInterval(this.x);
+        }else{
+          this.time--;
+        }
+      }
+    }
+
+    window.customElements.define(ClockComponent.is, ClockComponent);
+  </script>
+</dom-module>

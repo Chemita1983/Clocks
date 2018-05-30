@@ -1,0 +1,68 @@
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="form-component">
+  <template>
+    <style>
+      :host {
+        display: block;
+        text-align: center;
+      }
+
+      #formcontainer {
+        display: flex;
+        justify-content: space-around;
+      }
+
+      .buttonIng {
+        background-color: orange;
+        color: white;
+        font-weight: bold;
+      }
+
+      .buttonIng:hover {
+        background-color: blue;
+        color: white;
+        font-weight: bold;
+      }
+    </style>
+
+    <div id="formcontainer">
+      <paper-input label="Caption" value="{{caption}}"></paper-input>
+      <paper-input label="Time" value="{{time}}"></paper-input>
+      <paper-button class="buttonIng" on-click="handleClick">Create</paper-button>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * Main menu
+     *
+     */
+    class FormComponent extends Polymer.Element {
+      static get is() { return 'form-component'; }
+      static get properties() {
+        return {
+          caption: {
+            type: String,
+            value: null,
+          },
+          time: {
+            type: String,
+            value: null,
+          }
+        }
+      }
+        handleClick(e) {
+        this.dispatchEvent(new CustomEvent('clickedCreate', {
+          detail: {caption:this.caption,time:this.time}, 
+          bubbles: true, 
+          composed:true
+        }));
+      }
+    }
+
+    window.customElements.define(FormComponent.is, FormComponent);
+  </script>
+</dom-module>
