@@ -37,7 +37,6 @@
     /**
      * @customElement
      * @polymer
-     * Chema
      */
     class ClocksApp extends Polymer.Element {
       static get is() { return 'clocks-app'; }
@@ -52,18 +51,18 @@
       ready(){
         super.ready();
         this.addEventListener('clickedCreate', this.createClock);
-        this.addEventListener('deleteClockEvent',this.removeClock);
+        this.addEventListener('clickRemoveClock', this.removeClock);
       }
       createClock(event){
         const clockElement = document.createElement('clock-component');
         clockElement.setAttribute('caption', event.detail.caption || '');
         clockElement.setAttribute('time', event.detail.time || 0);        
         this.$['clock-container'].appendChild(clockElement);
-        clockElement.startClock();
+        clockElement._changedState(clockElement);
       }
 
-      removeClock(){
-         this.$['clock-container'].remove(); 
+      removeClock(event){
+        this.$[event.detail.element].remove();
       }
     }
 

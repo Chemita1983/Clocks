@@ -8,27 +8,74 @@
         text-align: center;
       }
 
-      #clockBox {
-          background-color: green;
-          width: 300px;
-        }
-
-      .buttonClock{
-        background-color: lightslategrey;
-        color: black;
-        width: 50px;
+      #clockBox{
+        display: flex;
+        width: 300px;
+        justify-content: space-around;
+        -webkit-flex-flow: row wrap;
+        flex-flow: row wrap;
       }
 
+      .clockBoxRunning {
+        background-color: #dff0d8;
+        border-color: #d0e9c6;
+        color: #3c763d;
+        border-style: solid;
+        border-width: 1px;
+        padding: 1px;
+        
+      }
+
+      .clockBoxPaused {
+        background-color: #d9edf7;
+        border-color: #bcdff1;
+        color: #31708f;
+        border-style: solid;
+        border-width: 1px;
+        padding: 1px;
+      }
+
+      .clockBoxFinish {
+        background-color: #f2dede;
+        border-color: #ebcccc;
+        color: #a94442;
+        border-style: solid;
+        border-width: 1px;
+        padding: 1px;
+      }
+
+      .formatTime {
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 1rem;
+      }
+
+      .buttonClock {
+        width: 50px;
+        border-style: solid;
+        border-width: 1px;
+      }
+
+      #title{
+        width: 100%;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      }
+
+      #buttonsContainer {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        align-content: center;
+      }
     </style>
 
-   <div id="clockBox">
+    <div id="clockBox">
       <label id="title">[[caption]]</label>
-      <h1>[[formattedTime]]</h1>
-      <paper-button class="buttonClock" on-click="startClock">Start</paper-button>
-      <paper-button class="buttonClock" on-click="stopClock">Pause</paper-button>
-      <paper-button class="buttonClock"on-click="_deleteClock">Delete</paper-button>
-      <hr>
-   </div>
+      <h1 class="formatTime">[[formattedTime]]</h1>
+      <div id="buttonsContainer">
+        <paper-button id="buttonDo" class="buttonClock" on-click="_changedState" value=[[valueButton]] >[[valueButton]]</paper-button>
+        <paper-button id="buttonDelete" class="buttonClock" on-click="clickRemoveClock">Delete</paper-button>
+      </div>
+    </div>
 
   </template>
 
@@ -40,19 +87,23 @@
     class ClockComponent extends Polymer.Element {
       static get is() { return 'clock-component'; }
       static get properties() {
-        return { 
+        return {
           time: {
             type: Number,
             value: 0,
-            observer:'_formatTime'
+            observer: '_formatTime'
           },
-          formattedTime:{
+          formattedTime: {
             type: String,
-            value:'00:00:00'
+            value: '00:00:00'
           },
-          caption:{
+          caption: {
             type: String,
-            value:''
+            value: ''
+          },
+          valueButton: {
+            type: String,
+            value: 'Start',
           }
         }
       }
@@ -62,26 +113,49 @@
         this.set('formattedTime', date.toISOString().substr(11, 8));
       }
 
-      startClock(){
-        this.x = setInterval(() => { this._updateTime() }, 1000);
-      }
-
-      stopClock(){
+      stopClock() {
         clearInterval(this.x);
+        this._changedState('paused');
       }
 
-      _deleteClock(){
-        this.dispatchEvent(new CustomEvent('deleteClockEvent', { 
-          bubbles: true, 
-          composed:true
+      clickRemoveClock(e) {
+        this.dispatchEvent(new CustomEvent('clickRemoveClock', {
+          detail:{element:this},
+          bubbles: true,
+          composed: true
         }));
       }
 
-      _updateTime(){
-        if (this.time === 0){
+      _updateTime() {
+        if (this.time === 0) {
           clearInterval(this.x);
-        }else{
+          this._changedState('Finish');
+        } else {
           this.time--;
+        }
+      }
+
+      _changedState(e) {
+        debugger;
+        var valueB = e.target.getAttribute('value');
+        switch (valueB) {
+          case 'Start':
+            this.$['clockBox'].className = "clockBoxRunning";
+            this.x = setInterval(() => { this._updateTime() }, 1000);
+            this.valueButton='Paused'
+            break;
+          case 'Paused':
+            this.$['clockBox'].className = "clockBoxPaused"
+            this.valueButton='Start'
+            clearInterval(this.x);
+            break;
+          case 'Finish':
+            this.$['clockBox'].className = "clockBoxFinish"
+            this.$['buttonDo'].remove();
+            clearInterval(this.x);
+            break;
+          default:
+            null;
         }
       }
     }
