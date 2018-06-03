@@ -18,6 +18,7 @@
         background-color: orange;
         color: white;
         font-weight: bold;
+        width: 20 0px;
       }
 
       .buttonIng:hover {
@@ -54,7 +55,7 @@
           }
         }
       }
-        handleClick(e) {
+      handleClick(e) {
         this.dispatchEvent(new CustomEvent('clickedCreate', {
           detail: {caption:this.caption,time:this.time}, 
           bubbles: true, 

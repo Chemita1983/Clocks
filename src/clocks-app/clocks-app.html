@@ -51,13 +51,18 @@
       ready(){
         super.ready();
         this.addEventListener('clickedCreate', this.createClock);
+        this.addEventListener('clickRemoveClock', this.removeClock);
       }
       createClock(event){
         const clockElement = document.createElement('clock-component');
         clockElement.setAttribute('caption', event.detail.caption || '');
         clockElement.setAttribute('time', event.detail.time || 0);        
         this.$['clock-container'].appendChild(clockElement);
-        clockElement.startClock();
+        clockElement._changedState(clockElement);
+      }
+
+      removeClock(event){
+        this.$[event.detail.element].remove();
       }
     }
 
